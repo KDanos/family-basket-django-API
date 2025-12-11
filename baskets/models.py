@@ -2,14 +2,14 @@ from django.db import models
 
 # Create your models here.
 class Basket(models.Model): 
-    PENDING = 'pending'
-    COMPLETED = 'completed'
-    OPEN =  'open'
+    PENDING = 'Pending' #these are the options transferred to the resource instance
+    COMPLETED = 'Completed'
+    OPEN =  'Open'
     
-    STATUS_CHOICES = {
-        PENDING: 'pending', 
-        COMPLETED: 'completed',
-        OPEN: 'open'
+    STATUS_CHOICES = {  # these are the options displayed by the django admin website
+        PENDING: 'Pending_KD', 
+        COMPLETED: 'Completed_KD',
+        OPEN: 'Open_KD'
     }
     name = models.CharField(max_length = 255)
     store = models.CharField (max_length = 255,blank=True, null=True )
