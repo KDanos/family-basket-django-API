@@ -27,6 +27,11 @@ class Basket(models.Model):
         related_name = 'baskets_owned'
     )
     
+    shared_with = models.ManyToManyField(
+        to = 'users.User',
+        related_name = 'baskets_shared', 
+        blank = True
+    )
     
     def __str__(self):
         my_string = self.name 

@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 import environ
+
+
 env = environ.Env()
 environ.Env.read_env()
 
@@ -49,6 +51,12 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES':[
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ]
+}
+
+from datetime import timedelta
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta (days = 7),
+    "TOKEN_OBTAIN_SERIALIZER": "users.serializers.tokens.MyTokenObtainPairSerializer"
 }
 
 MIDDLEWARE = [
