@@ -21,6 +21,13 @@ class Basket(models.Model):
         default = PENDING
     )
 
+    owner = models.ForeignKey(
+        to = 'users.User',
+        on_delete = models.CASCADE, 
+        related_name = 'baskets_owned'
+    )
+    
+    
     def __str__(self):
         my_string = self.name 
         if self.store: 
