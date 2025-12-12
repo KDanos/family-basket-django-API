@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound, PermissionDenied
+from rest_framework.exceptions import NotFound
 from .serializers.common import BasketSerializer
 from .models import Basket
 from rest_framework.permissions import IsAuthenticated
@@ -38,11 +38,13 @@ class BasketsDetailsView(APIView):
     
     def get (self, request, pk):
         basket = self.get_object(pk)
+        self.check_object_permissions(request, basket)
         serializer =PopulatedBasketSerializer(basket)
         return Response (serializer.data)
     
     def put (self, request, pk):      
         basket = self.get_object (pk)
+        self.check_object_permissions(request, basket)
         serializer = BasketSerializer(basket, data= request.data, partial = True)
         serializer.is_valid(raise_exception = True)
         serializer.save()
@@ -50,11 +52,7 @@ class BasketsDetailsView(APIView):
         
     def delete (self, request, pk):
         basket= self.get_object (pk)
-        
-        #basic ownership check       
-        if basket.owner != request.user:
-            raise PermissionDenied (f'Only {basket.owner} may delete this basket.')
-        
+        self.check_object_permissions(request, basket)
         basket = self.get_object(pk)
         basket.delete()
         return Response (status = 204)
