@@ -26,7 +26,6 @@ class ItemsView(APIView):
     def post (self, request, pk):   
         request.data['basket'] =  basket =  self.get_basket(pk).id
         request.data['creator'] = request.user.id
-
         serializer = ItemSerializer(data=request.data)
         serializer.is_valid(raise_exception = True)
         serializer.save()
