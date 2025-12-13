@@ -27,6 +27,14 @@ class BasketsView (APIView):
         serializer.save()
         return Response (serializer.data, status=201)
 
+class BasketUserView(APIView):
+    def get (self, request, pk):  
+        baskets_owned = Basket.objects.filter(owner=pk)
+        baskets_shared = Basket.objects.filter (shared_with=pk)
+        baskets = baskets_owned | baskets_shared
+        serializer = BasketSerializer (baskets, many=True)
+        return Response (serializer.data, status=201)
+
 class BasketsDetailsView(APIView):
     permission_classes = [IsOwnerOrShared]    
     
