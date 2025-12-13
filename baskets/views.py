@@ -8,18 +8,16 @@ from utils.permissions import IsOwnerOrShared
 from .serializers.populate import PopulatedBasketSerializer
 
 # Create your views here.
-class HelloWorldView (APIView):
-    def get (self, request):
-        return Response ({'message': 'Hello, world!'})
-
 class BasketsView (APIView): 
     permission_classes =[IsAuthenticated]
     
+    #Index all baskets
     def get (self, request):
         baskets = Basket.objects.all()
         serializer = BasketSerializer (baskets, many=True)
         return Response (serializer.data)
 
+    #Create a new basket
     def post (self, request): 
         request.data ['owner'] = request.user.id
         serializer = BasketSerializer (data=request.data)
@@ -27,13 +25,16 @@ class BasketsView (APIView):
         serializer.save()
         return Response (serializer.data, status=201)
 
+
 class BasketUserView(APIView):
+    #Index the baskets of a specific owner
     def get (self, request, pk):  
         baskets_owned = Basket.objects.filter(owner=pk)
         baskets_shared = Basket.objects.filter (shared_with=pk)
-        baskets = baskets_owned | baskets_shared
+        baskets = (baskets_owned | baskets_shared).distinct()
         serializer = BasketSerializer (baskets, many=True)
         return Response (serializer.data, status=201)
+
 
 class BasketsDetailsView(APIView):
     permission_classes = [IsOwnerOrShared]    
@@ -61,6 +62,5 @@ class BasketsDetailsView(APIView):
     def delete (self, request, pk):
         basket= self.get_object (pk)
         self.check_object_permissions(request, basket)
-        basket = self.get_object(pk)
         basket.delete()
         return Response (status = 204)
