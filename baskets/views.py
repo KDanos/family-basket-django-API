@@ -27,12 +27,14 @@ class BasketsView (APIView):
 
 
 class BasketUserView(APIView):
+    permission_classes =[IsAuthenticated]
+    
     #Index the baskets of a specific owner
-    def get (self, request, pk):  
-        baskets_owned = Basket.objects.filter(owner=pk)
-        baskets_shared = Basket.objects.filter (shared_with=pk)
+    def get (self, request):  
+        baskets_owned = Basket.objects.filter(owner=request.user.id)
+        baskets_shared = Basket.objects.filter (shared_with=request.user.id)
         baskets = (baskets_owned | baskets_shared).distinct()
-        serializer = BasketSerializer (baskets, many=True)
+        serializer = PopulatedBasketSerializer (baskets, many=True)
         return Response (serializer.data, status=201)
 
 
