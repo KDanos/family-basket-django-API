@@ -11,6 +11,7 @@ class Basket(models.Model):
         COMPLETED: 'Completed_KD',
         OPEN: 'Open_KD'
     }
+    
     name = models.CharField(max_length = 255)
     store = models.CharField (max_length = 255,blank=True, null=True )
     created_at = models.DateTimeField (auto_now_add=True)
